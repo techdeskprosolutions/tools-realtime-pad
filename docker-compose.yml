@@ -3,20 +3,5 @@ services:
     build: .
     container_name: realtime-pad-app
     restart: unless-stopped
-
-  caddy:
-    image: caddy:2.8-alpine
-    container_name: caddy-reverse-proxy
-    restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-    # Inline reverse proxy (no Caddyfile needed → fixes Hostinger mount error)
-    command: caddy reverse-proxy --from tools.techdeskpro.com --to app:3000
-    depends_on:
-      - app
-
-# Persist SSL certificates between restarts
-volumes:
-  caddy_data:
-  caddy_config:
+      - "3001:3000"   # Unique port — you can change the 3001 if needed later
