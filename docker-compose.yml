@@ -5,19 +5,18 @@ services:
     restart: unless-stopped
 
   caddy:
-    image: caddy:2.8
+    image: caddy:2.8-alpine
     container_name: caddy-reverse-proxy
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
+    # Inline reverse proxy (no Caddyfile needed → fixes Hostinger mount error)
+    command: caddy reverse-proxy --from tools.techdeskpro.com --to app:3000
     depends_on:
       - app
 
+# Persist SSL certificates between restarts
 volumes:
   caddy_data:
   caddy_config:
