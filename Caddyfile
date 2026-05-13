@@ -1,4 +1,0 @@
-tools.techdeskpro.com {
-    # Auto HTTPS + SSL (Let's Encrypt)
-    reverse_proxy app:3000
-}
