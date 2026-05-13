@@ -4,9 +4,11 @@ WORKDIR /app
 
 # Copy package files first (better caching)
 COPY package*.json ./
-RUN npm ci --only=production
 
-# Copy the rest
+# Install dependencies (this works without package-lock.json)
+RUN npm install --production
+
+# Copy the rest of the app
 COPY . .
 
 # Expose the port the app runs on
