@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Pad • tools.techdeskpro.com</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+    :root {
+      --bg: #0f172a;
+      --text: #e2e8f0;
+      --accent: #22d3ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #1e2937;
+      padding: 1rem 2rem;
+      text-align: center;
+      border-bottom: 3px solid var(--accent);
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 500;
+    }
+    .subtitle {
+      margin: 0.25rem 0 0;
+      opacity: 0.8;
+      font-size: 1rem;
+    }
+    .container {
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+    textarea {
+      flex: 1;
+      width: 100%;
+      padding: 1.5rem;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      background: #1e2937;
+      color: var(--text);
+      border: 2px solid #334155;
+      border-radius: 12px;
+      resize: none;
+      outline: none;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.2);
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #22d3ee;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🔴 Real-Time Shared Pad</h1>
+    <p class="subtitle"><span class="live-dot"></span>Live on all your devices right now</p>
+  </header>
+  
+  <div class="container">
+    <textarea id="pad" placeholder="Start typing... Everything you type appears instantly on every other device or tab."></textarea>
+  </div>
+
+  <footer>
+    tools.techdeskpro.com • Powered by Node.js + Socket.io • Truly real-time WebSockets
+  </footer>
+
+  <script>
+    const socket = io();
+    const textarea = document.getElementById('pad');
+
+    // Load initial text
+    socket.on('init', (text) => {
+      textarea.value = text;
+    });
+
+    // Receive live updates from other devices
+    socket.on('textUpdate', (newText) => {
+      textarea.value = newText;
+    });
+
+    // Send updates as you type (every keystroke = instant sync)
+    textarea.addEventListener('input', () => {
+      socket.emit('textUpdate', textarea.value);
+    });
+  </script>
+</body>
+</html>
