@@ -1,11 +1,8 @@
-version: '3.8'
-
 services:
   app:
     build: .
     container_name: realtime-pad-app
     restart: unless-stopped
-    # No external ports needed — Caddy will proxy
 
   caddy:
     image: caddy:2.8
